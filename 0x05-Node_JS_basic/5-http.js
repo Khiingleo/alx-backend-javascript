@@ -1,72 +1,52 @@
 const http = require('http');
 const fs = require('fs');
 
-function getStudentsData(path) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(path, 'utf8', (err, data) => {
-      if (err) {
-        reject(new Error('Cannot load the database'));
-        return;
-      }
-      const lines = data.trim().split('\n');
-
-      if (lines.length <= 1) {
-        resolve({ totalStudents: 0, details: {} });
-        return;
-      }
-
-      const students = {};
-
-      lines.slice(1).forEach((line) => {
-        const fields = line.split(',');
-        const field = fields[fields.length - 1].trim();
-
-        if (!students[field]) {
-          students[field] = [];
-        }
-
-        students[field].push(fields[0]);
-      });
-
-      let totalStudents = 0;
-
-      Object.keys(students).forEach((field) => {
-        totalStudents += students[field].length;
-      });
-
-      resolve({ totalStudents, details: students });
-    });
-  });
+async function studentsData(path) {
+  let data;
+  try {
+    data = await fs.promises.readFile(path, 'utf8');
+  } catch (error) {
+    throw new Error('Cannot load the database');
+  }
+  const students = data.split('\n')
+    .map((student) => student.split(','))
+    .filter((student) => student.length === 4 && student[0] !== 'firstname')
+    .map((student) => ({
+      firstName: student[0],
+      lastName: student[1],
+      age: student[2],
+      field: student[3],
+    }));
+  const csStudents = students
+    .filter((student) => student.field === 'CS')
+    .map((student) => student.firstName);
+  const sweStudents = students
+    .filter((student) => student.field === 'SWE')
+    .map((student) => student.firstName);
+  console.log(`Number of students: ${students.length}`);
+  console.log(`Number of students in CS: ${csStudents.length}. List: ${csStudents.join(', ')}`);
+  console.log(`Number of students in SWE: ${sweStudents.length}. List: ${sweStudents.join(', ')}`);
+  return { students, csStudents, sweStudents };
 }
 
 const app = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
   if (req.url === '/') {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Hello Holberton School!\n');
+    res.end('Hello Holberton School!');
   } else if (req.url === '/students') {
-    getStudentsData(process.argv[2])
-      .then(({ totalStudents, details }) => {
-        res.writeHead(200, { 'Content-Type': 'text/plain' });
-        res.write('This is the list of our students\n');
-        res.write(`Number of students: ${totalStudents}\n`);
-        Object.keys(details).forEach((field) => {
-          const numStudents = details[field].length;
-          res.write(`Number of students in ${field}: ${numStudents}. List: ${details[field].join(', ')}\n`);
-        });
-        res.end();
-      })
-      .catch((error) => {
-        res.writeHead(500, { 'Content-Type': 'text/plain' });
-        res.end(`${error.message}\n`);
-      });
-  } else {
-    res.writeHead(404, { 'Content-Type': 'text/plain' });
-    res.end('Not found\n');
+    res.write('This is the list of our students\n');
+    studentsData(process.argv[2]).then((data) => {
+      res.write(`Number of students: ${data.students.length}\n`);
+      res.write(`Number of students in CS: ${data.csStudents.length}. List: ${data.csStudents.join(', ')}\n`);
+      res.write(`Number of students in SWE: ${data.sweStudents.length}. List: ${data.sweStudents.join(', ')}`);
+      res.end();
+    }).catch((err) => res.end(err.message));
   }
 });
 
 app.listen(1245, () => {
-  console.log('Server running at http://localhost:1245/');
+  console.log('Server running at http://localhost:1245');
 });
 
 module.exports = app;
