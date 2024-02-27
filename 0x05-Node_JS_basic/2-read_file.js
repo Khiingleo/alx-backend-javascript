@@ -25,6 +25,7 @@ const countStudents = (path) => {
       return;
     }
     // get the data info
+    // eslint-disable-next-line no-unused-vars
     const [firstName, lastName, age, field] = line.split(',');
     // check if field is empty or undefined
     if (field) {
@@ -32,15 +33,16 @@ const countStudents = (path) => {
       if (!counters[field]) {
         counters[field] = { count: 0, names: [] };
       }
+      // eslint-disable-next-line no-plusplus
       counters[field].count++;
       counters[field].names.push(firstName);
     }
   });
   // log the number of students in each field after processing all lines
   console.log(`Number of students: ${lines.length - 1}`);
-  for (const field in counters) {
-    const numbers = counters[field].count;
-    const names = counters[field].names.join(', ');
+  for (const [field, data] of Object.entries(counters)) {
+    const numbers = data.count;
+    const names = data.names.join(', ');
     console.log(`Number of students in ${field}: ${numbers}. List: ${names}`);
   }
 };

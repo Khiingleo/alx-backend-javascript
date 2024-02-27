@@ -12,21 +12,23 @@ const countStudents = (path) => new Promise((resolve, reject) => {
         if (idx === 0) {
           return;
         }
+        // eslint-disable-next-line no-unused-vars
         const [firstName, lastName, age, field] = line.split(',');
         if (field) {
           if (!counters[field]) {
             counters[field] = { count: 0, names: [] };
           }
+          // eslint-disable-next-line no-plusplus
           counters[field].count++;
           counters[field].names.push(firstName);
         }
       });
 
       console.log(`Number of students: ${lines.length - 1}`);
-      for (const field in counters) {
-        const number = counters[field].count;
-        const names = counters[field].names.join(', ');
-        console.log(`Number of students in ${field}: ${number}. List: ${names}`);
+      for (const [field, data] of Object.entries(counters)) {
+        const numbers = data.count;
+        const names = data.names.join(', ');
+        console.log(`Number of students in ${field}: ${numbers}. List: ${names}`);
       }
 
       resolve();
