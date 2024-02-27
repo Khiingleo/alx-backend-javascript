@@ -1,5 +1,5 @@
-const displayMessage = () => {
-  console.log('Hello NodeJS!');
+const displayMessage = (string) => {
+  console.log(string);
 };
 
 module.exports = displayMessage;
