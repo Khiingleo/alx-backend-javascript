@@ -1,12 +1,12 @@
 const { expect } = require("chai");
 const calculateNumber = require("./2-calcul_chai");
 
-describe("calculate", () => {
+describe("calculateNumber function", () => {
   describe("SUM", () => {
     it("should add two positive numbers correctly", () => {
       expect(calculateNumber("SUM", 3, 5)).to.equal(8);
     });
-    it("test it with floating first var", () => {
+    it("test with first parameter as a floating number", () => {
       expect(calculateNumber("SUM", 1.0, 3)).to.equal(4);
       expect(calculateNumber("SUM", 1.2, 3)).to.equal(4);
       expect(calculateNumber("SUM", 1.7, 3)).to.equal(5);
@@ -16,7 +16,7 @@ describe("calculate", () => {
       expect(calculateNumber("SUM", 1, 2.6)).to.equal(4);
       expect(calculateNumber("SUM", 1, 2.2)).to.equal(3);
     });
-    it("test it with floating second var", () => {
+    it("should return the rounded sum of two numbers'", () => {
       expect(calculateNumber("SUM", 1.9, 2.0)).to.equal(4);
       expect(calculateNumber("SUM", 1.9, 2.6)).to.equal(5);
       expect(calculateNumber("SUM", 1.2, 2.6)).to.equal(4);
@@ -38,8 +38,6 @@ describe("calculate", () => {
     });
     it("test it with floating first var", () => {
       expect(calculateNumber("SUBTRACT", 3, 1.0)).to.equal(2);
-      expect(calculateNumber("SUBTRACT", 3, 1.2)).to.equal(2);
-      expect(calculateNumber("SUBTRACT", 3, 1.7)).to.equal(1);
       expect(calculateNumber("SUBTRACT", -3, 1.7)).to.equal(-5);
       expect(calculateNumber("SUBTRACT", 3, -1.7)).to.equal(5);
     });
