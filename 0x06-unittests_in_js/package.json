@@ -7,12 +7,12 @@
     "description": "Unittests in JS",
     "main": "index.js",
     "devDependencies": {
-        "mocha": "^10.3.0"
+        "mocha": "^10.2.0"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "chai": "^5.1.0",
-        "sinon": "^17.0.1"
+        "chai": "^4.3.7",
+        "sinon": "^15.0.1"
     }
 }
