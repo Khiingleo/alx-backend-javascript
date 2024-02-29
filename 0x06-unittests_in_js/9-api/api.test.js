@@ -10,14 +10,14 @@ describe('Index page', () => {
         });
     });
     it('Response message for valid :id', (done) => {
-        request('http://localhost:7865', (error, response, body) => {
+        request('http://localhost:7865/cart/12', (error, response, body) => {
             expect(response.statusCode).to.equal(200);
             expect(body).to.equal('Payment methods for cart 12');
             done();
         });
     });
-    it ('Correct status code when :id is not a bumber', (done) => {
-        request('http://localhost:7865', (error, response) => {
+    it ('Correct status code when :id is not a number', (done) => {
+        request('http://localhost:7865/cart/hello', (error, response) => {
             expect(response.statusCode).to.equal(404);
             done();
         });
